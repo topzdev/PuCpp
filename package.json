@@ -1,0 +1,14 @@
+{
+	"name": "pucpp-programming-language",
+	"version": "1.0.0",
+	"description": "Programming language for C++ haters",
+	"main": "index.js",
+	"scripts": {
+		"dev": "nodemon index.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"nodemon": "^2.0.2"
+	}
+}
