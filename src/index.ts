@@ -7,8 +7,9 @@
 *	
 */
 
-const readline = require('readline')
-const run = require('./lexer')
+import readline from 'readline'
+import Runner from './lexer/Runner'
+
 
 const rl = readline.createInterface({
 	input: process.stdin,
@@ -21,12 +22,12 @@ const recursiveAsyncReadLine = function () {
 		if (input == 'exit')
 			return rl.close()
 
-		let result = run('index.js', input)
+		let result = new Runner('index.js', input).start();
 
 		if (result.error) console.error(result.error.errorString())
 		else console.log(result.tokens)
 
-		recursiveAsyncReadLine() //Calling this function again to ask new input
+		recursiveAsyncReadLine()
 	})
 }
 

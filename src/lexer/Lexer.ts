@@ -1,7 +1,8 @@
-const Token = require('./Tokens')
-const { IllegalCharacterError } = require('../error')
-const { TrackPosition } = require('../utils')
-const {
+import Token from './Tokens';
+import IllegalCharacterError from '../error/IllegalCharacterError';
+import TrackPosition from '../utils/TrackPosition'
+import IReturnedToken from '../interface/IReturnedToken';
+import {
 	DIGITS,
 	ARITHMETIC,
 	TAB_AND_SPACE,
@@ -13,19 +14,20 @@ const {
 	TOK_DIVI,
 	TOK_LPAREN,
 	TOK_RPAREN,
-} = require('../configs/configs')
+} from '../configs/configs'
 
 
 
 class Lexer {
+	filename: string;
+	text: string;
+	current_char: string | undefined;
+	position: TrackPosition;
+
 	/**
      * Lexer class checking the all posible tokens in your given string
-     * 
-     * @param {string} text 
-     * @param {string} filename 
-     * @returns {this} from TrackPosition
      */
-	constructor(filename, text) {
+	constructor(filename: string, text: string) {
 		this.filename = filename
 		this.text = text
 		this.position = new TrackPosition(-1, 0, -1, filename)
@@ -43,10 +45,8 @@ class Lexer {
 
 	/**
 	 * check the token from the given text and return the validated token 
-	 * 
-	 * @returns {object} @property {array} tokens array of validated tokens | @property {error} 
 	 */
-	createTokens() {
+	createTokens(): IReturnedToken {
 		let tokens = []
 		while (this.current_char != undefined) {
 			// includes = is a array method that check if the current character is exisiting in TAB_AND_SPACE
@@ -76,21 +76,21 @@ class Lexer {
 	}
 
 	arithmeticCheck() {
-		let token
+		let token;
 
-		if (this.current_char === '+') token = new Token(TOK_PLUS).register()
-		else if (this.current_char === '-') token = new Token(TOK_MINUS).register()
-		else if (this.current_char === '*') token = new Token(TOK_MULTI).register()
-		else if (this.current_char === '/') token = new Token(TOK_DIVI).register()
-		else if (this.current_char === '(') token = new Token(TOK_LPAREN).register()
-		else if (this.current_char === ')') token = new Token(TOK_RPAREN).register()
+		if (this.current_char === '+') token = new Token(TOK_PLUS).represent()
+		else if (this.current_char === '-') token = new Token(TOK_MINUS).represent()
+		else if (this.current_char === '*') token = new Token(TOK_MULTI).represent()
+		else if (this.current_char === '/') token = new Token(TOK_DIVI).represent()
+		else if (this.current_char === '(') token = new Token(TOK_LPAREN).represent()
+		else if (this.current_char === ')') token = new Token(TOK_RPAREN).represent()
 
 		return token
 	}
 
 	numberCheck() {
-		let num_str = ''
-		let dot_count = 0
+		let num_str: string = ''
+		let dot_count: number = 0
 
 		// ... = spread operator
 		while (this.current_char != undefined && ['.', ...DIGITS].includes(this.current_char)) {
@@ -107,11 +107,11 @@ class Lexer {
 		}
 
 		if (dot_count === 0) {
-			return new Token(TOK_INT, parseInt(num_str)).register()
+			return new Token(TOK_INT, parseInt(num_str)).represent()
 		} else {
-			return new Token(TOK_FLOAT, parseFloat(num_str)).register()
+			return new Token(TOK_FLOAT, parseFloat(num_str)).represent()
 		}
 	}
 }
 
-module.exports = Lexer
+export default Lexer;
