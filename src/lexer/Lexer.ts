@@ -14,6 +14,7 @@ import {
 	TOK_DIVI,
 	TOK_LPAREN,
 	TOK_RPAREN,
+	TOK_EOF,
 } from '../configs/configs'
 
 
@@ -62,7 +63,7 @@ class Lexer {
 
 			} else {
 				let character = this.current_char
-				let position_start = this.position.register()
+				let position_start = this.position.copy()
 
 				this.next()
 
@@ -71,7 +72,7 @@ class Lexer {
 			}
 
 		}
-
+		tokens.push(new Token(TOK_EOF, undefined, this.position).represent())
 		return { tokens, error: undefined }
 	}
 
@@ -79,11 +80,11 @@ class Lexer {
 		let token;
 
 		if (this.current_char === '+') token = new Token(TOK_PLUS).represent()
-		else if (this.current_char === '-') token = new Token(TOK_MINUS).represent()
-		else if (this.current_char === '*') token = new Token(TOK_MULTI).represent()
-		else if (this.current_char === '/') token = new Token(TOK_DIVI).represent()
-		else if (this.current_char === '(') token = new Token(TOK_LPAREN).represent()
-		else if (this.current_char === ')') token = new Token(TOK_RPAREN).represent()
+		else if (this.current_char === '-') token = new Token(TOK_MINUS, undefined, this.position).represent()
+		else if (this.current_char === '*') token = new Token(TOK_MULTI, undefined, this.position).represent()
+		else if (this.current_char === '/') token = new Token(TOK_DIVI, undefined, this.position).represent()
+		else if (this.current_char === '(') token = new Token(TOK_LPAREN, undefined, this.position).represent()
+		else if (this.current_char === ')') token = new Token(TOK_RPAREN, undefined, this.position).represent()
 
 		return token
 	}
@@ -91,7 +92,7 @@ class Lexer {
 	numberCheck() {
 		let num_str: string = ''
 		let dot_count: number = 0
-
+		let position_start: TrackPosition = this.position.copy();
 		// ... = spread operator
 		while (this.current_char != undefined && ['.', ...DIGITS].includes(this.current_char)) {
 			if (this.current_char === '.') {
@@ -107,9 +108,9 @@ class Lexer {
 		}
 
 		if (dot_count === 0) {
-			return new Token(TOK_INT, parseInt(num_str)).represent()
+			return new Token(TOK_INT, parseInt(num_str), position_start, this.position).represent()
 		} else {
-			return new Token(TOK_FLOAT, parseFloat(num_str)).represent()
+			return new Token(TOK_FLOAT, parseFloat(num_str), position_start, this.position).represent()
 		}
 	}
 }

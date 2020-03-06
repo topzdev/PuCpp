@@ -25,7 +25,7 @@ const recursiveAsyncReadLine = function () {
 		let result = new Runner('index.js', input).start();
 
 		if (result.error) console.error(result.error.errorString())
-		else console.log(result.tokens)
+		else console.log('Result', result.tokens)
 
 		recursiveAsyncReadLine()
 	})
@@ -35,4 +35,33 @@ recursiveAsyncReadLine()
 
 // let len = "Length".length
 
-// console.log("Length".length
+// class Test {
+
+// 	callback() {
+// 		return 'Call back function'
+// 	}
+
+// 	parse() {
+// 		return this.callMe(this.callback);
+// 	}
+
+// 	callMe(func: Function) {
+// 		let a = func();
+
+// 		console.log(a);
+// 		let i = 4;
+// 		while (i != 0) {
+// 			let b = func();
+// 			console.log(b);
+
+// 			i--;
+// 		}
+// 		console.log('hello')
+
+// 		return "hello"
+// 	}
+// }
+
+// const test = new Test
+
+// console.log(test.parse());

@@ -17,7 +17,7 @@ class TrackPosition {
     /**
      * Advance to the next current character
      */
-    public next(current_char: string | undefined) {
+    public next(current_char?: string | undefined) {
         this.index += 1
         this.column += 1
 
@@ -32,7 +32,7 @@ class TrackPosition {
     /**
      * This get the position of where the error occur
      */
-    public register() {
+    public copy() {
         return new TrackPosition(this.index, this.line, this.column, this.filename, this.filetext)
     }
 
