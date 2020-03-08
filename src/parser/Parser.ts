@@ -1,23 +1,23 @@
-import ITokenized from "../interface/ITokenized";
+import Token from '../lexer/Token'
 import ParseResult from './ParseResult'
-import BinaryOperator from './BinaryOperator'
+import BinaryOperatorNode from './BinaryOperatorNode'
 import NumberNode from './NumberNode'
+import UnaryOperatorNode from "./UnaryOperatorNode";
 
 import InvalidSyntaxError from "../error/InvalidSyntaxError";
 
 import { TOK_INT, TOK_FLOAT, TOK_MULTI, TOK_DIVI, TOK_PLUS, TOK_MINUS, TOK_EOF, TOK_RPAREN, TOK_LPAREN } from "../configs/configs";
-import UnaryOperator from "./UnaryOperator";
 
 class Parser {
-	private tokens: Array<ITokenized>
+	private tokens: Array<Token>
 	private token_index: number;
-	private current_token: ITokenized | undefined;
+	private current_token: Token
 
-	constructor(tokens: Array<ITokenized>) {
-		console.log(tokens);
+	constructor(tokens: Array<Token>) {
+		// console.log(tokens);
 		this.tokens = tokens
 		this.token_index = -1;
-		this.current_token = undefined
+		this.current_token = undefined!;
 		this.next()
 	}
 
@@ -31,11 +31,9 @@ class Parser {
 
 	public parse(): ParseResult {
 		let result = this.expression();
-		// console.log(result, this.current_token?.position_start);
-		if (!result.error && this.current_token?.dataType !== TOK_EOF) {
-			return result.failure(new InvalidSyntaxError(this.current_token?.position_start!, this.current_token?.position_end!, "Expected '+' '-', '*', or '/'"))
+		if (!result.error && this.current_token.type !== TOK_EOF) {
+			return result.failure(new InvalidSyntaxError(this.current_token.position_start!, this.current_token.position_end!, "Expected '+' '-', '*', or '/'"))
 		}
-
 		return result;
 	}
 
@@ -44,32 +42,37 @@ class Parser {
 		let token = this.current_token
 
 
-		if ([TOK_PLUS, TOK_MINUS].includes(token?.dataType)) {
+		if ([TOK_PLUS, TOK_MINUS].includes(token.type)) {
 			result.register(this.next());
 
 			let factor = result.register(this.factor())
 
 			if (result.error) return result;
 
-			return result.success(new UnaryOperator(token?.dataType, factor).represent())
+			return result.success(new UnaryOperatorNode(token, factor))
 
-		} else if ([TOK_INT, TOK_FLOAT].includes(token?.dataType)) {
+		}
+		else if ([TOK_INT, TOK_FLOAT].includes(token.type)) {
 			result.register(this.next());
 
-			return result.success(new NumberNode(token?.value).represent());
+			return result.success(new NumberNode(token));
 
-		} else if (token?.dataType === TOK_LPAREN) {
-			// ! Fix this issue
+		}
+		// ! Fix this issue
+		else if (token.type === TOK_LPAREN) {
+
 			result.register(this.next())
 
 			let expression = result.register(this.expression)
 
-			console.log(this.current_token, result.error)
+			console.log(result);
+
 			if (result.error) return result;
-			if (this.current_token?.dataType === TOK_RPAREN) {
+			if (this.current_token.type === TOK_RPAREN) {
 				result.register(this.next())
 				return result.success(expression);
-			} else {
+			}
+			else {
 				return result.failure(new InvalidSyntaxError(token!.position_start!, token!.position_end!, "Expected Right Parenthesis ')'"))
 			}
 		}
@@ -77,39 +80,32 @@ class Parser {
 		return result.failure(new InvalidSyntaxError(token!.position_start!, token!.position_end!, "Expected int or float"))
 	}
 
-	private term(): ParseResult {
-		let result = new ParseResult();
-		let leftNode: any = result.register(this.factor())
-
-		if (result.error) return result;
-
-		while ([TOK_MULTI, TOK_DIVI].includes(this.current_token?.dataType)) {
-			let operationToken = this.current_token;
-			result.register(this.next())
-			let rightNode = result.register(this.factor())
-
-			if (result.error) return result;
-			leftNode = new BinaryOperator(leftNode, operationToken?.dataType, rightNode).represent();
-		}
-		return result.success(leftNode);
+	private term() {
+		return this.binaryOperator(this.factor.bind(this), [TOK_MULTI, TOK_DIVI])
 	}
 
-	private expression(): ParseResult {
-		let result = new ParseResult();
-		let leftNode: any = result.register(this.term())
+	private expression() {
+		return this.binaryOperator(this.term.bind(this), [TOK_PLUS, TOK_MINUS])
+	}
 
+	private binaryOperator(func: Function, operator: Array<string>): ParseResult {
+
+		let result = new ParseResult();
+		// @ts-ignore
+		let leftNode: any = result.register(func())
 		if (result.error) return result;
 
-		while ([TOK_PLUS, TOK_MINUS].includes(this.current_token?.dataType)) {
+		while (operator.includes(this.current_token.type)) {
 			let operationToken = this.current_token;
 			result.register(this.next())
-			let rightNode = result.register(this.term())
+			// @ts-ignore
+			let rightNode = result.register(func())
 
 			if (result.error) return result;
-			leftNode = new BinaryOperator(leftNode, operationToken?.dataType, rightNode).represent();
+			leftNode = new BinaryOperatorNode(leftNode, operationToken, rightNode)
+
 		}
 		return result.success(leftNode);
-
 	}
 }
 

@@ -1,6 +1,8 @@
 import Lexer from './Lexer'
 import Parser from '../parser/Parser';
 import IReturnedToken from '../interface/IReturnedToken';
+import Interpreter from '../interpreter/Interpreter';
+import Context from '../context/Context';
 
 class Runner {
     filename: string;
@@ -11,16 +13,23 @@ class Runner {
         this.text = text;
     }
 
-    start(): IReturnedToken {
+    start() {
         let lexer: Lexer = new Lexer(this.filename, this.text)
         let { tokens, error }: IReturnedToken = lexer.createTokens();
 
         if (error) return { tokens: undefined, error };
 
         let parser = new Parser(tokens!);
-        let ast = parser.parse();
+        let abstractSyntaxTree = parser.parse();
 
-        return { tokens: ast.node, error: ast.error }
+        if (abstractSyntaxTree.error) return { tokens: undefined, error: abstractSyntaxTree.error };
+
+        let interpreter = new Interpreter();
+        let context = new Context('<program>');
+        let result = interpreter.visit(abstractSyntaxTree.node, context);
+
+        if (result.error) return { error: result.error }
+        return { result: result.value?.value }
     }
 }
 

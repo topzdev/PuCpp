@@ -25,7 +25,7 @@ const recursiveAsyncReadLine = function () {
 		let result = new Runner('index.js', input).start();
 
 		if (result.error) console.error(result.error.errorString())
-		else console.log('Result', result.tokens)
+		else console.log('Result', result.result)
 
 		recursiveAsyncReadLine()
 	})
@@ -64,4 +64,19 @@ recursiveAsyncReadLine()
 
 // const test = new Test
 
-// console.log(test.parse());
+// class TestAgain {
+// 	name: any;
+// 	bdate: any;
+// 	constructor(name: any, bdate: any) {
+// 		this.name = name;
+// 		this.bdate = bdate;
+// 	}
+
+// 	__repr__() {
+// 		console.log('Heloo');
+// 	}
+// }
+
+// let rept = new TestAgain('topz', 'date me');
+
+// console.log(rept);

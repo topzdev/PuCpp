@@ -1,4 +1,4 @@
-import Token from './Tokens';
+import Token from './Token';
 import IllegalCharacterError from '../error/IllegalCharacterError';
 import TrackPosition from '../utils/TrackPosition'
 import IReturnedToken from '../interface/IReturnedToken';
@@ -48,7 +48,7 @@ class Lexer {
 	 * check the token from the given text and return the validated token 
 	 */
 	createTokens(): IReturnedToken {
-		let tokens = []
+		let tokens: Array<Token> = []
 		while (this.current_char != undefined) {
 			// includes = is a array method that check if the current character is exisiting in TAB_AND_SPACE
 			if (TAB_AND_SPACE.includes(this.current_char)) {
@@ -72,19 +72,19 @@ class Lexer {
 			}
 
 		}
-		tokens.push(new Token(TOK_EOF, undefined, this.position).represent())
+		tokens.push(new Token(TOK_EOF, undefined, this.position))
 		return { tokens, error: undefined }
 	}
 
-	arithmeticCheck() {
-		let token;
+	arithmeticCheck(): Token {
+		let token: any;
 
-		if (this.current_char === '+') token = new Token(TOK_PLUS).represent()
-		else if (this.current_char === '-') token = new Token(TOK_MINUS, undefined, this.position).represent()
-		else if (this.current_char === '*') token = new Token(TOK_MULTI, undefined, this.position).represent()
-		else if (this.current_char === '/') token = new Token(TOK_DIVI, undefined, this.position).represent()
-		else if (this.current_char === '(') token = new Token(TOK_LPAREN, undefined, this.position).represent()
-		else if (this.current_char === ')') token = new Token(TOK_RPAREN, undefined, this.position).represent()
+		if (this.current_char === '+') token = new Token(TOK_PLUS)
+		else if (this.current_char === '-') token = new Token(TOK_MINUS, undefined, this.position)
+		else if (this.current_char === '*') token = new Token(TOK_MULTI, undefined, this.position)
+		else if (this.current_char === '/') token = new Token(TOK_DIVI, undefined, this.position)
+		else if (this.current_char === '(') token = new Token(TOK_LPAREN, undefined, this.position)
+		else if (this.current_char === ')') token = new Token(TOK_RPAREN, undefined, this.position)
 
 		return token
 	}
@@ -108,9 +108,9 @@ class Lexer {
 		}
 
 		if (dot_count === 0) {
-			return new Token(TOK_INT, parseInt(num_str), position_start, this.position).represent()
+			return new Token(TOK_INT, parseInt(num_str), position_start, this.position)
 		} else {
-			return new Token(TOK_FLOAT, parseFloat(num_str), position_start, this.position).represent()
+			return new Token(TOK_FLOAT, parseFloat(num_str), position_start, this.position)
 		}
 	}
 }

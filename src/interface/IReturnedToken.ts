@@ -1,8 +1,8 @@
 import IllegalCharacterError from "../error/IllegalCharacterError";
-import ITokenized from "./ITokenized";
+import Token from "../lexer/Token";
 
 interface IReturnedToken {
-    tokens: Array<any> | undefined;
+    tokens: Array<Token> | undefined;
     error: IllegalCharacterError | undefined;
 }
 

@@ -1,5 +1,5 @@
 // Validations
-const DIGITS: Array<string> = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+const DIGITS: Array<string> = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 const ARITHMETIC: Array<string> = ['+', '-', '*', '/', '(', ')']
 const TAB_AND_SPACE: Array<string> = [' ', '\t']
 

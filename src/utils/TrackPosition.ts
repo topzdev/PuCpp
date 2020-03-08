@@ -17,13 +17,13 @@ class TrackPosition {
     /**
      * Advance to the next current character
      */
-    public next(current_char?: string | undefined) {
+    public next(current_char: string | undefined = undefined) {
         this.index += 1
         this.column += 1
 
         if (current_char === '\n') {
-            this.column += 0
             this.line += 1
+            this.column = 0
         }
 
         return this
