@@ -6,7 +6,8 @@ const {
   TOK_PLUS,
   TOK_MINUS,
   TOK_MULTI,
-  TOK_DIVI
+  TOK_DIVI,
+  TOK_POW
 } = require("../configs/configs");
 const RuntimeResult = require("./RuntimeResult");
 const Number = require("./Number");
@@ -58,6 +59,10 @@ class Interpreter {
 
       case TOK_DIVI:
         valid = left.divided_by(right);
+        break;
+
+      case TOK_POW:
+        valid = left.powered_by(right);
         break;
     }
 

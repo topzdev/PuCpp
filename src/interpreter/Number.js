@@ -63,6 +63,15 @@ class Number {
     }
   }
 
+  powered_by(other) {
+    if (other instanceof Number) {
+      return {
+        result: new Number(this.value ** other.value).set_context(this.context),
+        error: undefined
+      };
+    }
+  }
+
   represent() {
     return this.value.toString();
   }

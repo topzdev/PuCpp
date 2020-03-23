@@ -13,6 +13,7 @@ const TOK_DIVI = "DIVISION";
 const TOK_LPAREN = "LPAREN";
 const TOK_RPAREN = "RPAREN";
 const TOK_EOF = "END OF FILE";
+const TOK_POW = "POWER";
 
 module.exports = {
   ARITHMETIC,

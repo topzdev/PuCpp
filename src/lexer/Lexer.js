@@ -13,6 +13,7 @@ const {
   TOK_DIVI,
   TOK_LPAREN,
   TOK_RPAREN,
+  TOK_POW,
   TOK_EOF
 } = require("../configs/configs");
 
