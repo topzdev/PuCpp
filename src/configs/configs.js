@@ -1,6 +1,6 @@
 // Validations
 const DIGITS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-const ARITHMETIC = ["+", "-", "*", "/", "(", ")"];
+const ARITHMETIC = ["+", "-", "*", "/", "(", ")", "^"];
 const TAB_AND_SPACE = [" ", "\t"];
 
 // Tokens
@@ -13,6 +13,7 @@ const TOK_DIVI = "DIVISION";
 const TOK_LPAREN = "LPAREN";
 const TOK_RPAREN = "RPAREN";
 const TOK_EOF = "END OF FILE";
+const TOK_POW = "POWER";
 
 module.exports = {
   ARITHMETIC,
@@ -26,5 +27,6 @@ module.exports = {
   TOK_DIVI,
   TOK_LPAREN,
   TOK_RPAREN,
+  TOK_POW,
   TOK_EOF
 };

@@ -13,6 +13,7 @@ const {
   TOK_DIVI,
   TOK_LPAREN,
   TOK_RPAREN,
+  TOK_POW,
   TOK_EOF
 } = require("../configs/configs");
 
@@ -76,7 +77,8 @@ class Lexer {
   arithmeticCheck() {
     let token;
 
-    if (this.current_char === "+") token = new Token(TOK_PLUS);
+    if (this.current_char === "+") 
+      token = new Token(TOK_PLUS);
     else if (this.current_char === "-")
       token = new Token(TOK_MINUS, undefined, this.position);
     else if (this.current_char === "*")
@@ -87,6 +89,8 @@ class Lexer {
       token = new Token(TOK_LPAREN, undefined, this.position);
     else if (this.current_char === ")")
       token = new Token(TOK_RPAREN, undefined, this.position);
+    else if (this.current_char === "^")
+      token = new Token(TOK_POW, undefined, this.position);
 
     return token;
   }

@@ -14,7 +14,8 @@ const {
   TOK_MINUS,
   TOK_EOF,
   TOK_RPAREN,
-  TOK_LPAREN
+  TOK_LPAREN,
+  TOK_POW
 } = require("../configs/configs");
 
 class Parser {
@@ -48,19 +49,11 @@ class Parser {
     return result;
   }
 
-  factor() {
+  atom() {
     let result = new ParseResult();
     let token = this.current_token;
 
-    if ([TOK_PLUS, TOK_MINUS].includes(token.type)) {
-      result.register(this.next());
-
-      let factor = result.register(this.factor());
-
-      if (result.error) return result;
-
-      return result.success(new UnaryOperatorNode(token, factor));
-    } else if ([TOK_INT, TOK_FLOAT].includes(token.type)) {
+    if ([TOK_INT, TOK_FLOAT].includes(token.type)) {
       result.register(this.next());
 
       return result.success(new NumberNode(token));
@@ -69,9 +62,8 @@ class Parser {
     else if (token.type === TOK_LPAREN) {
       result.register(this.next());
 
-      let expression = result.register(this.expression);
-
-      console.log(result);
+      let expression = result.register(this.expression());
+      console.log(expression);
 
       if (result.error) return result;
       if (this.current_token.type === TOK_RPAREN) {
@@ -87,14 +79,27 @@ class Parser {
         );
       }
     }
+  }
 
-    return result.failure(
-      new InvalidSyntaxError(
-        token.position_start,
-        token.position_end,
-        "Expected int or float"
-      )
-    );
+  power() {
+    return this.binaryOperator(this.atom.bind(this), [TOK_POW, ], this.factor.bind(this));
+  }
+
+  factor() {
+    let result = new ParseResult();
+    let token = this.current_token;
+
+    if ([TOK_PLUS, TOK_MINUS].includes(token.type)) {
+      result.register(this.next());
+
+      let factor = result.register(this.factor());
+
+      if (result.error) return result;
+
+      return result.success(new UnaryOperatorNode(token, factor));
+    } 
+
+    return this.power();
   }
 
   term() {
@@ -105,7 +110,10 @@ class Parser {
     return this.binaryOperator(this.term.bind(this), [TOK_PLUS, TOK_MINUS]);
   }
 
-  binaryOperator(func, operator) {
+  binaryOperator(func, operator, func1=undefined) {
+    if (func1 === undefined) {
+      func1 = func;
+    }
     let result = new ParseResult();
     let leftNode = result.register(func());
     if (result.error) return result;
@@ -113,7 +121,7 @@ class Parser {
     while (operator.includes(this.current_token.type)) {
       let operationToken = this.current_token;
       result.register(this.next());
-      let rightNode = result.register(func());
+      let rightNode = result.register(func1());
 
       if (result.error) return result;
       leftNode = new BinaryOperatorNode(leftNode, operationToken, rightNode);
