@@ -1,17 +1,17 @@
 {
-	"name": "pucpp-programming-language",
-	"version": "1.0.0",
-	"description": "Programming language for C++ haters",
-	"main": "index.js",
-	"scripts": {
-		"dev": "nodemon src/index.ts"
-	},
-	"author": "",
-	"license": "ISC",
-	"devDependencies": {
-		"@types/node": "^13.7.7",
-		"nodemon": "^2.0.2",
-		"ts-node": "^8.6.2",
-		"typescript": "^3.8.3"
-	}
+  "name": "pucpp-programming-language",
+  "version": "1.0.0",
+  "description": "Programming language for C++ haters",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^13.7.7",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  }
 }

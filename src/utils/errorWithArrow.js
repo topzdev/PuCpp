@@ -1,8 +1,7 @@
-import TrackPosition from "./TrackPosition";
 
-export default function (text: string, position_start: TrackPosition, position_end: TrackPosition) {
+module.exports = function (text, position_start, position_end) {
 
-    let result: any = ''
+    let result = ''
 
     let idx_start = text.lastIndexOf('\n', position_start.index)
 
@@ -18,8 +17,8 @@ export default function (text: string, position_start: TrackPosition, position_e
 
         //! let line = text[idx_start : idx_end]
         let line = text[idx_start / idx_end]
-        let col_start: number = i === 0 ? position_start.column : 0
-        let col_end: number = i === line_count - 1 ? position_end.column : line.length - 1
+        let col_start = i === 0 ? position_start.column : 0
+        let col_end = i === line_count - 1 ? position_end.column : line.length - 1
 
 
         result += line + '\n'
