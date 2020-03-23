@@ -62,9 +62,8 @@ class Parser {
     else if (token.type === TOK_LPAREN) {
       result.register(this.next());
 
-      let expression = result.register(this.expression);
-
-      console.log(result);
+      let expression = result.register(this.expression());
+      console.log(expression);
 
       if (result.error) return result;
       if (this.current_token.type === TOK_RPAREN) {
@@ -112,7 +111,7 @@ class Parser {
   }
 
   binaryOperator(func, operator, func1=undefined) {
-    if (func1 == undefined) {
+    if (func1 === undefined) {
       func1 = func;
     }
     let result = new ParseResult();
